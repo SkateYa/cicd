@@ -1,29 +1,26 @@
 name: 打包项目
-# 触发 workflow 的事件
-on:
-  push:
-    # 分支随意
-    branches:
-      - main
+on: push
+
+permissions:
+  contents: write
 # 一个workflow由执行的一项或多项job
 jobs:
-  # 一个job任务，任务名为build
-  build:
+  npm-build:
+    name: npm-build工作
     #运行在最新版ubuntu系统中
     runs-on: ubuntu-latest
-    #步骤合集
     steps:
-      #新建一个名为checkout_actions的步骤
-      - name: checkout_actions
+      - name: 读取仓库内容😎
         #使用checkout@v4这个action获取源码
         uses: actions/checkout@v4
-      #使用建一个名为setup-node的步骤
-      - name: setup-node
-        #使用setup-node@v1这个action
-        uses: actions/setup-node@v1
-
-      - name: npm install and build
-        #执行执行某个shell命令或脚本
+      
+      - name: 安装依赖✨和项目打包📦
         run: |
           npm install
           npm run build
+      
+      - name: 部署🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: build
